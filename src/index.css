@@ -1,0 +1,33 @@
+/* body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+} */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@font-face {
+  font-family: "Outfit-Light"; /*Can be any text*/
+  src: local("Outfit-Light"), url("./fonts/Outfit-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Outfit-Black"; /*Can be any text*/
+  src: local("Outfit-Black"), url("./fonts/Outfit-Black.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Outfit-SemiBold"; /*Can be any text*/
+  src: local("Outfit-SemiBold"),
+    url("./fonts/Outfit-SemiBold.ttf") format("truetype");
+}

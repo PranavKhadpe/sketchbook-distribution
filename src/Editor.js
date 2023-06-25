@@ -1,9 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
+import "./updates-to-quill.css";
 import "./fonts/Outfit-SemiBold.ttf";
 import useAutosizeTextArea from "./useAutosizeTextArea";
 import QuoteBack from "./QuoteBack.js";
+import LinkBlot from "./LinkBlot.js";
+import Quote from "./Quote.js";
+import Delta from "quill-delta";
 
 const Editor = () => {
   const editorRef = useRef(null);
@@ -16,9 +20,15 @@ const Editor = () => {
   ]);
   const textAreaRef = useRef(null);
   const [activeTagIndex, setActiveTagIndex] = useState(null);
+  // const [numquotes, setNumquotes] = useState(0);
   const tagInputRefs = useRef([]);
   useAutosizeTextArea(textAreaRef.current, title);
   // useExternalScripts();
+  LinkBlot.blotName = "link";
+  LinkBlot.tagName = "a";
+
+  Quill.register(LinkBlot);
+  Quill.register(Quote);
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -33,62 +43,6 @@ const Editor = () => {
   }, []);
 
   useEffect(() => {
-    var index = document.querySelectorAll(".quoteback");
-
-    for (var item = 0; item < index.length; item++) {
-      // remove the footer element
-      console.log(index[item]);
-      index[item].removeChild(index[item].querySelector("footer"));
-
-      var text = index[item].innerHTML;
-
-      var url = index[item].cite;
-      var author = index[item].getAttribute("data-author");
-      var title = index[item].getAttribute("data-title");
-      var favicon = `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}&sz=64`;
-      var darkmode = index[item].getAttribute("darkmode");
-
-      // create a new component with that data
-      var component = `
-      <quoteback-component darkmode="${darkmode}" url="${url}" text="${encodeURIComponent(
-        text
-      )}" author="${author}" title="${title}" favicon="${favicon}"> 
-      </quoteback-component>    
-      `;
-      var newEl = document.createElement("div");
-      newEl.innerHTML = component;
-
-      // replace the original blockquote with our quoteback seed component
-      index[item].parentNode.replaceChild(newEl, index[item]);
-
-      var template = document.createElement("template");
-      template.innerHTML = `
-      <div class="quoteback-container" role="quotation" aria-labelledby="quoteback-author" tabindex="0">
-          <div id="quoteback-parent" class="quoteback-parent">
-              <div class="quoteback-content"></div>       
-          </div>
-
-          <div class="quoteback-head">       
-              <div class="quoteback-avatar"><img class="mini-favicon" src=""/></div>     
-              <div class="quoteback-metadata">
-                  <div class="metadata-inner">
-                      <div aria-label="" id="quoteback-author" class="quoteback-author"></div>
-                      <div aria-label="" class="quoteback-title"></div>
-                  </div>  
-              </div>
-
-          <div class="quoteback-backlink"><a target="_blank" aria-label="go to the full text of this quotation" rel="noopener" href="" class="quoteback-arrow">Go to text <span class="right-arrow">&#8594;</span></a></div>
-          </div>  
-      </div>`;
-      if (customElements.get("quoteback-component")) {
-        console.log("already defined");
-      } else {
-        window.customElements.define("quoteback-component", QuoteBack);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     if (editorRef.current) {
       const editor = new Quill(editorRef.current, {
         theme: "snow",
@@ -99,51 +53,44 @@ const Editor = () => {
 
       editor.on("text-change", () => {
         const html = editor.root.innerHTML;
-        // Do something with the updated HTML content
         console.log(html);
+        // handleQuoteBackRender();
       });
 
-      const delta = {
-        ops: [
-          {
-            insert: {
-              blockquote: {
-                class: "quoteback",
-                darkmode: "",
-                "data-title": "Quote the web with Quotebacks",
-                "data-author": "@ness_labs",
-                cite: "https://nesslabs.com/quotebacks",
-              },
-            },
-          },
-          {
-            insert:
-              "The ethos behind Quotebacks is one of the reasons why I love the product. Yes, it’s a great addition to my thinking toolkit, allowing me to store quotes without polluting my note-taking and thinking system. But it’s also a tool which aims at making the Internet a more generous place. If you regularly write online, give it a try!",
-          },
-          {
-            insert: {
-              footer: [
-                {
-                  insert: "@ness_labs",
-                },
-                {
-                  attributes: {
-                    cite: "https://nesslabs.com/quotebacks",
-                  },
-                  insert: {
-                    cite: {
-                      insert: "https://nesslabs.com/quotebacks",
-                      a: {},
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        ],
+      const handleLinkClick = () => {
+        const value = prompt("Enter link URL");
+        editor.format("link", value);
       };
 
-      editor.updateContents(delta);
+      const handlequotebackClick = () => {
+        const quoteData = {
+          url: "https://arxiv.org/pdf/2303.06794.pdf",
+          title:
+            "Sensing Wellbeing in the Workplace, Why and For Whom? Envisioning Impacts with Organizational Stakeholders",
+          author: "Anna Kawakami",
+          text: `However, in the human-computer interaction (HCI), ubiquitous computing (UbiComp), and computer-supported cooperative work (CSCW) literature, where many such sensing innovations are blossoming on the technical front [20, 21, 119, 126, 160], there is an inadequate empirical understanding of how everyday workers envision passive sensing-based wellbeing technologies may live within a socio-ecological context`,
+        };
+
+        const range = editor.getSelection(true);
+
+        if (range) {
+          editor.updateContents(
+            new Delta()
+              .retain(range.index)
+              .delete(range.length)
+              .insert({ qb: quoteData })
+          );
+        }
+      };
+
+      //when the link button is clicked, call the handleLinkClick function
+      document
+        .querySelector("#link-button")
+        .addEventListener("click", handleLinkClick);
+
+      document
+        .querySelector("#quoteback-button")
+        .addEventListener("click", handlequotebackClick);
     }
   }, []);
 
@@ -178,7 +125,23 @@ const Editor = () => {
             <button className="ql-bold">Bold</button>
             <button className="ql-italic">Italic</button>
             <button className="ql-underline">Underline</button>
-            <button id="quoteback">
+            <button id="link-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#000000"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+              </svg>
+            </button>
+            <button id="quoteback-button">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 style={{ border: "1px solid black" }}
@@ -293,32 +256,11 @@ const Editor = () => {
               </span>
             </button>
           </div>
-          <div ref={editorRef} className="quill-editor" />
-          <div>
-            <blockquote
-              class="quoteback"
-              darkmode=""
-              data-title="Quote the web with Quotebacks"
-              data-author="@ness_labs"
-              cite="https://nesslabs.com/quotebacks"
-            >
-              The ethos behind Quotebacks is one of the reasons why I love the
-              product. Yes, it’s a great addition to my thinking toolkit,
-              allowing me to store quotes without polluting my note-taking and
-              thinking system. But it’s also a tool which aims at making the
-              Internet a more generous place. If you regularly write online,
-              give it a try!
-              <footer>
-                @ness_labs
-                <cite>
-                  {" "}
-                  <a href="https://nesslabs.com/quotebacks">
-                    https://nesslabs.com/quotebacks
-                  </a>
-                </cite>
-              </footer>
-            </blockquote>
-          </div>
+          <div
+            ref={editorRef}
+            className="quill-editor"
+            style={{ width: "100%", height: "100%" }}
+          />
         </div>
         <div className="w-1/3"></div>
       </div>

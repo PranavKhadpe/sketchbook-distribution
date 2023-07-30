@@ -31,3 +31,14 @@ code {
   src: local("Outfit-SemiBold"),
     url("./fonts/Outfit-SemiBold.ttf") format("truetype");
 }
+
+@font-face {
+  font-family: "EBGaramond-VariableFont_wght"; /*Can be any text*/
+  src: local("EBGaramond-VariableFont_wght"), url("./fonts/EBGaramond-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "EBGaramond-Italic-VariableFont_wght";
+  /*Can be any text*/
+  src: local("EBGaramond-Italic-VariableFont_wght"), url("./fonts/EBGaramond-Italic-VariableFont_wght.ttf") format("truetype");
+}

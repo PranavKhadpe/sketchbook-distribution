@@ -18,7 +18,6 @@ class Quote extends BlockEmbed {
     const parent = document.createElement("div");
     parent.classList.add("quoteback-parent");
     parent.setAttribute("id", "quoteback-parent");
-    // parent.setAttribute("contenteditable", "false");
 
     const content = document.createElement("div");
     content.classList.add("quoteback-content");

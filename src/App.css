@@ -14,12 +14,18 @@
 div.ql-editor {
   width: 100%;
   height: 100%;
-  font-family: "EBGaramond-VariableFont_wght";
+  /* font-family: "EBGaramond-VariableFont_wght"; */
+  font-family: "freight-text-pro", serif;
+  font-weight: 400;
+  font-style: normal;
   font-size: 1.2rem;
 }
 
 #title {
-  font-family: "Outfit-SemiBold";
+  /* font-family: "Outfit-SemiBold"; */
+  font-family: "freight-text-pro", serif;
+  font-weight: 700;
+  font-style: normal;
   font-size: 2rem;
   margin-bottom: 1rem;
 }
@@ -236,7 +242,10 @@ div.ql-editor {
 }
 
 em {
-  font-family: "EBGaramond-Italic-VariableFont_wght";
+  /* font-family: "EBGaramond-Italic-VariableFont_wght"; */
+  /* font-family: "freight-text-pro", serif;
+  font-weight: 400; */
+  font-style: italic;
 }
 
 .tooltip {

@@ -10,6 +10,7 @@ import QuoteBack from "./QuoteBack.js";
 import LinkBlot from "./LinkBlot.js";
 import Quote from "./Quote.js";
 import Delta from "quill-delta";
+import ImageUploader from "quill-image-uploader";
 
 const Editor = () => {
   const editorRef = useRef(null);
@@ -21,6 +22,7 @@ const Editor = () => {
   const [underline, setUnderline] = useState(0);
   const textAreaRef = useRef(null);
   const [activeTagIndex, setActiveTagIndex] = useState(null);
+  const [editorHtml, setEditorHtml] = useState("");
   // const [numquotes, setNumquotes] = useState(0);
   const tagInputRefs = useRef([]);
   useAutosizeTextArea(textAreaRef.current, title);
@@ -30,6 +32,11 @@ const Editor = () => {
 
   Quill.register(LinkBlot);
   Quill.register(Quote);
+  Quill.register("modules/imageUploader", ImageUploader);
+
+  useEffect(() => {
+    console.log(editorHtml);
+  }, [editorHtml]);
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -232,10 +239,39 @@ const Editor = () => {
 
   useEffect(() => {
     if (editorRef.current) {
+      var old_element = document.getElementById("#image");
+      var new_element = old_element.cloneNode(true);
+      old_element.parentNode.replaceChild(new_element, old_element);
+
       const editor = new Quill(editorRef.current, {
         theme: "snow",
         modules: {
           toolbar: "#toolbar",
+          imageUploader: {
+            upload: (file) => {
+              return new Promise((resolve, reject) => {
+                const formData = new FormData();
+                formData.append("image", file);
+
+                fetch(
+                  "https://api.imgbb.com/1/upload?key=fe6aeed6ec0f7c2ef2c4a15f072a3255",
+                  {
+                    method: "POST",
+                    body: formData,
+                  }
+                )
+                  .then((response) => response.json())
+                  .then((result) => {
+                    console.log(result);
+                    resolve(result.data.url);
+                  })
+                  .catch((error) => {
+                    reject("Upload failed");
+                    console.error("Error:", error);
+                  });
+              });
+            },
+          },
         },
       });
 
@@ -243,8 +279,8 @@ const Editor = () => {
       // var new_element = old_element.cloneNode(true);
       // old_element.parentNode.replaceChild(new_element, old_element);
 
-      var old_element = document.getElementById("#bold");
-      var new_element = old_element.cloneNode(true);
+      old_element = document.getElementById("#bold");
+      new_element = old_element.cloneNode(true);
       old_element.parentNode.replaceChild(new_element, old_element);
 
       old_element = document.getElementById("#italic");
@@ -263,6 +299,9 @@ const Editor = () => {
       old_element = document.getElementById("#underline");
       new_element = old_element.cloneNode(true);
       old_element.parentNode.replaceChild(new_element, old_element);
+
+      // //make necessary changes to imageuploader
+      // const imageButton = document.querySelector(".ql-image");
 
       const boldButton = document.querySelector(".ql-bold");
       const italicButton = document.querySelector(".ql-italic");
@@ -419,6 +458,7 @@ const Editor = () => {
                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
               </svg>
             </button>
+            <button id="#image" class="ql-image"></button>
             <button id="quoteback-button">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -448,7 +488,7 @@ const Editor = () => {
                   outline: "none",
                   width: "100%",
                   resize: "none",
-                  lineHeight: "1",
+                  lineHeight: "1.3",
                   fontSize: "2rem",
                   overflow: "hidden",
                 }}
@@ -539,6 +579,7 @@ const Editor = () => {
             id="quill"
             className="quill-editor"
             style={{ width: "100%", height: "100%" }}
+            onKeyUp={() => setEditorHtml(editorRef.current.innerHTML)}
           />
         </div>
         <div className="w-1/3"></div>

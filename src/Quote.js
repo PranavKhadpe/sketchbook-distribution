@@ -88,9 +88,28 @@ class Quote extends BlockEmbed {
     return Link.sanitize(url);
   }
 
+  // static value(node) {
+  //   return {
+  //     text: node.innerHTML,
+  //   };
+  // }
+  // static value(node) {
+  //   const contentNode = node.querySelector(".quoteback-content");
+  //   return {
+  //     text: contentNode ? contentNode.innerHTML : "",
+  //   };
+  // }
   static value(node) {
+    const contentNode = node.querySelector(".quoteback-content");
+    const authorNode = node.querySelector(".quoteback-author");
+    const titleNode = node.querySelector(".quoteback-title");
+    const backlinkNode = node.querySelector(".quoteback-backlink a");
+
     return {
-      text: node.innerHTML,
+      text: contentNode ? contentNode.innerHTML : "",
+      author: authorNode ? authorNode.innerHTML : "",
+      title: titleNode ? titleNode.innerHTML : "",
+      url: backlinkNode ? backlinkNode.getAttribute("href") : "",
     };
   }
 }

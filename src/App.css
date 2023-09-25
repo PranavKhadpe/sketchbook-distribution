@@ -1,3 +1,7 @@
+html {
+  font-size: 60%;
+}
+
 .app {
   display: flex;
   flex-direction: column;
@@ -11,23 +15,35 @@
   margin-bottom: 1rem;
 }
 
+.container {
+  width: 80rem;
+  padding: 4rem;
+  margin: auto;
+}
+
 div.ql-editor {
   width: 100%;
   height: 100%;
   /* font-family: "EBGaramond-VariableFont_wght"; */
   font-family: "freight-text-pro", serif;
+  font-variant-numeric: lining-nums;
   font-weight: 400;
   font-style: normal;
-  font-size: 1.2rem;
+  font-size: 1.8rem;
+  line-height: 1.5;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #title {
   /* font-family: "Outfit-SemiBold"; */
   font-family: "freight-text-pro", serif;
+  font-variant-numeric: lining-nums;
   font-weight: 700;
   font-style: normal;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  margin-bottom: 0;
+  margin-top: 2rem;
 }
 
 .tag-button.active {
@@ -261,4 +277,17 @@ em {
   border-bottom-left-radius: 5px;
   border: 1px solid #ccc;
   outline: none;
+}
+
+.tooltip-text {
+  font-size: 1.2rem;
+}
+
+#date-tag {
+  font-family: "freight-text-pro", serif;
+  font-variant-numeric: lining-nums;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
 }

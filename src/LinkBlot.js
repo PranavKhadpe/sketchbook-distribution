@@ -9,7 +9,7 @@ class LinkBlot extends Inline {
     node.setAttribute("href", value);
     node.setAttribute(
       "style",
-      "color: black; border-bottom:1px dashed; text-decoration: none;"
+      "color: black; border-bottom: 0.08em solid rgba(127, 127, 127, 0.2); text-decoration: none;"
     );
     // Okay to set other non-format related attributes
     // These are invisible to Parchment so must be static

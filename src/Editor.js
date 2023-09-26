@@ -46,7 +46,7 @@ const Editor = () => {
   const [editorHtml, setEditorHtml] = useState("");
   const [editorContent, setEditorContent] = useState(null);
   const [quillInstance, setQuillInstance] = useState(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [published, setPublished] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const tagInputRefs = useRef([]);
@@ -566,6 +566,7 @@ const Editor = () => {
                   lineHeight: "1.3",
                   fontSize: "2.5rem",
                   overflow: "hidden",
+                  fontVariantNumeric: "lining-nums",
                 }}
                 onChange={(e) => {
                   setTitle(e.target.value);

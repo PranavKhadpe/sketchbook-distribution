@@ -17,9 +17,27 @@ import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 
-const saveBlogPost = (title, tags, content, quillcontent) => {
+const saveBlogPost = (
+  id,
+  title,
+  tags,
+  content,
+  quillcontent,
+  date,
+  updateDate,
+  published
+) => {
   axios
-    .post("http://localhost:5000/save", { title, tags, content, quillcontent })
+    .post("http://localhost:5000/save", {
+      id,
+      title,
+      tags,
+      content,
+      quillcontent,
+      date,
+      updateDate,
+      published,
+    })
     .then((response) => {
       console.log(response.data);
     })
@@ -33,6 +51,7 @@ const Editor = () => {
   //add a state variable to store the post title
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(moment().format("LL"));
+  const [updateDate, setUpdateDate] = useState(moment().format("LL"));
   const [retrievedContent, setRetrievedContent] = useState("");
   const [retrievedDelta, setRetrievedDelta] = useState(null);
   const [tags, setTags] = useState([]);
@@ -47,7 +66,8 @@ const Editor = () => {
   const [editorContent, setEditorContent] = useState(null);
   const [quillInstance, setQuillInstance] = useState(null);
   const [searchParams] = useSearchParams();
-  const [published, setPublished] = useState(false);
+  const [articleid, setArticleId] = useState(null);
+  const [published, setPublished] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const tagInputRefs = useRef([]);
   useAutosizeTextArea(textAreaRef.current, title);
@@ -66,6 +86,9 @@ const Editor = () => {
         setTags(blogPost.tags);
         setRetrievedContent(blogPost.content);
         setRetrievedDelta(blogPost.quillcontent);
+        if (blogPost.creationtime) {
+          setDate(blogPost.creationtime);
+        }
       })
       .catch((error) => {
         console.error("Error retrieving blog post:", error);
@@ -111,7 +134,8 @@ const Editor = () => {
     const article_id = searchParams.get("id");
     console.log(article_id);
     getBlogPost(article_id);
-  }, []);
+    setArticleId(article_id);
+  }, [searchParams]);
 
   async function getQuote(editor) {
     const selection = await editor.getSelection();
@@ -460,7 +484,16 @@ const Editor = () => {
   }, [activeTagIndex]);
 
   const savecurrentpost = () => {
-    saveBlogPost(title, tags, editorHtml, editorContent);
+    saveBlogPost(
+      articleid,
+      title,
+      tags,
+      editorHtml,
+      editorContent,
+      date,
+      updateDate,
+      published
+    );
   };
 
   const handleTagEdit = (index, event) => {
@@ -539,8 +572,18 @@ const Editor = () => {
               className="w-1/3"
               style={{ display: "flex", justifyContent: "end", height: "42px" }}
             >
-              <Button appearance="outline" icon={<Eye20Filled />}>
-                {published ? "Unpublish" : "Publish"}
+              <Button
+                appearance="outline"
+                icon={<Eye20Filled />}
+                onClick={() => {
+                  if (published == 0) {
+                    setPublished(1);
+                  } else {
+                    setPublished(0);
+                  }
+                }}
+              >
+                {published == 1 ? "Hide" : "Publish"}
               </Button>
               <Button
                 appearance="outline"

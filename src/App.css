@@ -6,7 +6,37 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
+}
+
+.library {
+  position: fixed;
+  width: 50rem;
+  background-color: #e9e5e2;
+  padding: 4rem;
+  margin-top: 0;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.library-links {
+  margin-bottom: 1rem;
+}
+
+.draft-caption {
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.post-link {
+  text-decoration: none;
+  padding-bottom: 0em;
+  border-bottom: 0.08em solid rgba(127, 127, 127, 0.2);
+  color: #000000e6;
+}
+
+.new-button {
+  margin-bottom: 4rem;
 }
 
 #toolbar {

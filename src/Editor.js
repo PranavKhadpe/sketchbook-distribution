@@ -12,7 +12,12 @@ import Quote from "./Quote.js";
 import Delta from "quill-delta";
 import ImageUploader from "quill-image-uploader";
 import { makeStyles, Button } from "@fluentui/react-components";
-import { Save20Filled, Eye20Filled } from "@fluentui/react-icons";
+import {
+  Save20Filled,
+  Eye20Filled,
+  Add20Regular,
+  ArrowRight16Filled,
+} from "@fluentui/react-icons";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
@@ -69,6 +74,14 @@ const Editor = () => {
   const [articleid, setArticleId] = useState(null);
   const [published, setPublished] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [allPosts, setAllPosts] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/allposts").then((response) => {
+      setAllPosts(response.data);
+    });
+  }, []);
+
   const tagInputRefs = useRef([]);
   useAutosizeTextArea(textAreaRef.current, title);
 
@@ -512,6 +525,26 @@ const Editor = () => {
   return (
     <div style={{ width: "100%" }}>
       <div className="flex" style={{ width: "100%" }}>
+        <div className="library">
+          <div className="new-button">
+            <a href=".">
+              <Button icon={<Add20Regular />}>New</Button>
+            </a>
+          </div>
+          <div className="draft-caption">Drafts:</div>
+          {allPosts.map((post) => (
+            <div className="library-links">
+              {/* <ArrowRight16Filled /> */}
+              <a
+                key={post._id}
+                href={`./?id=${post._id}`}
+                className="post-link"
+              >
+                {post.title}
+              </a>
+            </div>
+          ))}
+        </div>
         <div className="container">
           <div
             className="flex"

@@ -17,6 +17,7 @@ import {
   Eye20Filled,
   Add20Regular,
   ArrowRight16Filled,
+  Delete20Filled,
 } from "@fluentui/react-icons";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
@@ -45,9 +46,24 @@ const saveBlogPost = (
     })
     .then((response) => {
       console.log(response.data);
+      if (response.data.message == "Post saved") {
+        window.location.href = `./?id=${response.data.articleId}`;
+      }
     })
     .catch((error) => {
       console.error("Error saving blog post:", error);
+    });
+};
+
+const deleteBlogPost = (id) => {
+  axios
+    .delete(`http://localhost:5000/post/${id}`)
+    .then((response) => {
+      console.log(response.data);
+      window.location.href = `./`;
+    })
+    .catch((error) => {
+      console.error("Error deleting blog post:", error);
     });
 };
 
@@ -299,6 +315,7 @@ const Editor = () => {
       submitBtn.textContent = "Insert";
       submitBtn.style.borderTopLeftRadius = "0px";
       submitBtn.style.borderBottomLeftRadius = "0px";
+      submitBtn.style.fontSize = "1.2rem";
       submitBtn.addEventListener("click", function () {
         const linkUrl = input.value;
         console.log("Link URL:", linkUrl);
@@ -445,7 +462,11 @@ const Editor = () => {
       bulletButton.addEventListener("click", function () {
         setBullet((bullet) => {
           const newBullet = bullet === 0 ? 1 : 0;
-          editor.format("list", "bullet", "user");
+          if (newBullet === 1) {
+            editor.format("list", "bullet", "user");
+          } else {
+            editor.format("list", false);
+          }
           bulletButton.classList.toggle("ql-active", newBullet);
           return newBullet;
         });
@@ -454,7 +475,11 @@ const Editor = () => {
       listButton.addEventListener("click", function () {
         setOrder((order) => {
           const newOrder = order === 0 ? 1 : 0;
-          editor.format("list", "ordered", "user");
+          if (newOrder === 1) {
+            editor.format("list", "ordered", "user");
+          } else {
+            editor.format("list", false);
+          }
           listButton.classList.toggle("ql-active", newOrder);
           return newOrder;
         });
@@ -512,6 +537,10 @@ const Editor = () => {
     );
   };
 
+  const deletecurrentpost = () => {
+    deleteBlogPost(articleid);
+  };
+
   const handleTagEdit = (index, event) => {
     const updatedTags = [...tags];
     updatedTags[index] = event.target.value;
@@ -549,28 +578,28 @@ const Editor = () => {
           <div
             className="flex"
             style={{
-              width: "100%",
+              width: "150%",
               display: "flex",
               justifyContent: "space-between",
             }}
           >
-            <div id="toolbar" className="w-2/3" style={{ width: "100%" }}>
+            <div id="toolbar" className="w-2/3">
               {/* Render your custom toolbar components here */}
               {/* For example, you can include buttons for formatting, etc. */}
-              <select id="ql-size" class="ql-size">
+              <select id="ql-size" className="ql-size">
                 <option value="small"></option>
                 <option selected></option>
                 <option value="large"></option>
                 <option value="huge"></option>
               </select>
-              <button id="#bold" class="ql-bold"></button>
-              <button id="#italic" class="ql-italic"></button>
-              <button id="#underline" class="ql-underline"></button>
-              <button class="ql-script" value="sub"></button>
-              <button class="ql-script" value="super"></button>
-              <button id="ordered" class="ql-list" value="ordered"></button>
-              <button id="bulleted" class="ql-list" value="bullet"></button>
-              <button id="link-button" class="link">
+              <button id="#bold" className="ql-bold"></button>
+              <button id="#italic" className="ql-italic"></button>
+              <button id="#underline" className="ql-underline"></button>
+              <button className="ql-script" value="sub"></button>
+              <button className="ql-script" value="super"></button>
+              <button id="ordered" className="ql-list" value="ordered"></button>
+              <button id="bulleted" className="ql-list" value="bullet"></button>
+              <button id="link-button" className="link">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -606,11 +635,15 @@ const Editor = () => {
             </div>
             <div
               className="w-1/3"
-              style={{ display: "flex", justifyContent: "end", height: "42px" }}
+              style={{
+                display: "flex",
+                justifyContent: "start",
+                height: "42px",
+              }}
             >
               <Button
                 appearance="outline"
-                icon={<Eye20Filled />}
+                style={{ marginRight: "1rem", marginLeft: "1rem" }}
                 onClick={() => {
                   if (published == 0) {
                     setPublished(1);
@@ -628,6 +661,16 @@ const Editor = () => {
               >
                 Save
               </Button>
+              {articleid && (
+                <Button
+                  appearance="outline"
+                  icon={<Delete20Filled />}
+                  onClick={deletecurrentpost}
+                  style={{ marginLeft: "2rem" }}
+                >
+                  Delete
+                </Button>
+              )}
             </div>
           </div>
           <div>

@@ -19,6 +19,14 @@ html {
   overflow-y: scroll;
 }
 
+.delete-button {
+  position: fixed;
+  display: flex;
+  right: 40rem;
+  top: 4rem;
+  height: 42px;
+}
+
 .library-links {
   margin-bottom: 1rem;
 }
@@ -49,11 +57,13 @@ html {
   width: 80rem;
   padding: 4rem;
   margin: auto;
+  height: 100%;
 }
 
 div.ql-editor {
   width: 100%;
   height: 100%;
+  min-height: 60rem;
   /* font-family: "EBGaramond-VariableFont_wght"; */
   font-family: "freight-text-pro", serif;
   font-variant-numeric: lining-nums;
@@ -307,6 +317,7 @@ em {
   border-bottom-left-radius: 5px;
   border: 1px solid #ccc;
   outline: none;
+  font-size: 1.2rem;
 }
 
 .tooltip-text {

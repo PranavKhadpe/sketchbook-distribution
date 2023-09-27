@@ -86,6 +86,9 @@ const Editor = () => {
         setTags(blogPost.tags);
         setRetrievedContent(blogPost.content);
         setRetrievedDelta(blogPost.quillcontent);
+        if (blogPost.publishingstatus == 0 || blogPost.publishingstatus == 1) {
+          setPublished(blogPost.publishingstatus);
+        }
         if (blogPost.creationtime) {
           setDate(blogPost.creationtime);
         }

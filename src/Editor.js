@@ -34,7 +34,7 @@ const saveBlogPost = (
   published
 ) => {
   axios
-    .post("http://localhost:5000/save", {
+    .post("https://pranavwriting.azurewebsites.net/save", {
       id,
       title,
       tags,
@@ -57,7 +57,7 @@ const saveBlogPost = (
 
 const deleteBlogPost = (id) => {
   axios
-    .delete(`http://localhost:5000/post/${id}`)
+    .delete(`https://pranavwriting.azurewebsites.net/post/${id}`)
     .then((response) => {
       console.log(response.data);
       window.location.href = `./`;
@@ -93,9 +93,11 @@ const Editor = () => {
   const [allPosts, setAllPosts] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/allposts").then((response) => {
-      setAllPosts(response.data);
-    });
+    axios
+      .get("https://pranavwriting.azurewebsites.net/allposts")
+      .then((response) => {
+        setAllPosts(response.data);
+      });
   }, []);
 
   const tagInputRefs = useRef([]);
@@ -107,7 +109,7 @@ const Editor = () => {
 
   async function getBlogPost(id) {
     axios
-      .get(`http://localhost:5000/post/${id}`)
+      .get(`https://pranavwriting.azurewebsites.net/post/${id}`)
       .then((response) => {
         const blogPost = response.data;
         console.log(blogPost.quillcontent);

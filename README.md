@@ -5,5 +5,5 @@ I think the usual ```npm install``` and ```npm start``` should give you a somewh
 2. Link to ImgBB. The way the sketchbook is currently set up, images are uploaded to ImgBB. To make this work:
     1. Sign up at ImgBB
     2. Navigate to ```https://api.imgbb.com/``` to get your API key.
-    3. In this line: ```fetch("https://api.imgbb.com/1/upload?key=YOUR_API_KEY", { method: "POST", body: formData })``` add your API key.
+    3. In this line of ```Editor.js```: ```fetch("https://api.imgbb.com/1/upload?key=YOUR_API_KEY", { method: "POST", body: formData })``` add your API key.
 

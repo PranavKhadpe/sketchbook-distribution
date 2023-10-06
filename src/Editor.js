@@ -34,7 +34,7 @@ const saveBlogPost = (
   published
 ) => {
   axios
-    .post("https://pranavwriting.azurewebsites.net/save", {
+    .post("http://<app-name>.azurewebsites.net/save", {
       id,
       title,
       tags,
@@ -57,7 +57,7 @@ const saveBlogPost = (
 
 const deleteBlogPost = (id) => {
   axios
-    .delete(`https://pranavwriting.azurewebsites.net/post/${id}`)
+    .delete(`http://<app-name>.azurewebsites.net/post/${id}`)
     .then((response) => {
       console.log(response.data);
       window.location.href = `./`;
@@ -94,7 +94,7 @@ const Editor = () => {
 
   useEffect(() => {
     axios
-      .get("https://pranavwriting.azurewebsites.net/allposts")
+      .get("http://<app-name>.azurewebsites.net/allposts")
       .then((response) => {
         setAllPosts(response.data);
       });
@@ -109,7 +109,7 @@ const Editor = () => {
 
   async function getBlogPost(id) {
     axios
-      .get(`https://pranavwriting.azurewebsites.net/post/${id}`)
+      .get(`http://<app-name>.azurewebsites.net/post/${id}`)
       .then((response) => {
         const blogPost = response.data;
         console.log(blogPost.quillcontent);
@@ -370,13 +370,10 @@ const Editor = () => {
                 const formData = new FormData();
                 formData.append("image", file);
 
-                fetch(
-                  "https://api.imgbb.com/1/upload?key=fe6aeed6ec0f7c2ef2c4a15f072a3255",
-                  {
-                    method: "POST",
-                    body: formData,
-                  }
-                )
+                fetch("https://api.imgbb.com/1/upload?key=YOUR_API_KEY", {
+                  method: "POST",
+                  body: formData,
+                })
                   .then((response) => response.json())
                   .then((result) => {
                     console.log(result);

@@ -88,17 +88,6 @@ class Quote extends BlockEmbed {
     return Link.sanitize(url);
   }
 
-  // static value(node) {
-  //   return {
-  //     text: node.innerHTML,
-  //   };
-  // }
-  // static value(node) {
-  //   const contentNode = node.querySelector(".quoteback-content");
-  //   return {
-  //     text: contentNode ? contentNode.innerHTML : "",
-  //   };
-  // }
   static value(node) {
     const contentNode = node.querySelector(".quoteback-content");
     const authorNode = node.querySelector(".quoteback-author");
